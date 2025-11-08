@@ -6,8 +6,11 @@
 
 class Drivetrain {
     public:
-        Drivetrain();
-
+        static Drivetrain& get_instance() {
+            static Drivetrain instance;
+            return instance;
+        }
+        
         /**
          * @param left_y [-1, 1] positive means forward
          * @param right_x [-1, 1] positive means CCW
@@ -21,6 +24,8 @@ class Drivetrain {
         void set_speed(double linear, double angular);
 
     private:
+        Drivetrain();
+
         /**
          * @param speed [-1, 1] Speed of left wheel, positive means it is pushing the robot forward
          */

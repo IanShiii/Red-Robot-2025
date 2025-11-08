@@ -23,7 +23,10 @@ class Controller {
     uint8_t LOCAL_ADDRESS[5] = {0xF0,0xF0,0xF0,0xF0,0xE1};
     
     public:
-        Controller();
+        static Controller& get_instance() {
+            static Controller instance;
+            return instance;
+        }
 
         void loop();
 
@@ -46,6 +49,8 @@ class Controller {
         int get_d_pad();
     
     private:
+        Controller();
+
         RF24 radio_;
         uint8_t radio_packet_[6];
         uint8_t radio_led_state_ = 0;
