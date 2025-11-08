@@ -1,10 +1,18 @@
 #pragma once
 
 #include <Arduino.h>
+#include "pins.hpp"
+#include "settings.hpp"
 
 class Drivetrain {
     public:
-        Drivetrain(uint8_t left_enable_pin, uint8_t right_enable_pin, uint8_t left_phase_pin, uint8_t right_phase_pin);
+        Drivetrain();
+
+        /**
+         * @param left_y [-1, 1] positive means forward
+         * @param right_x [-1, 1] positive means CCW
+         */
+        void set_speed_based_on_joysticks(double left_y, double right_x);
 
         /**
          * @param linear [-1, 1] positive means forward
@@ -22,9 +30,4 @@ class Drivetrain {
          * @param speed [-1, 1] Speed of right wheel, positive means it is pushing the robot forward
          */
         void set_right_speed(double speed);
-
-        uint8_t left_enable_pin_;
-        uint8_t left_phase_pin_;
-        uint8_t right_enable_pin_;
-        uint8_t right_phase_pin_;
 };
