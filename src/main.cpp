@@ -13,8 +13,7 @@ void setup() {
 }
 
 void loop() {
-  // controller->loop();
-  // drivetrain->set_speed(controller->get_left_y(), controller->get_right_x());
-  drivetrain->set_speed(0.5, 0);
+  controller->loop();
+  drivetrain->set_speed(controller->get_left_y(), controller->get_right_x());
   delay(20);
 }

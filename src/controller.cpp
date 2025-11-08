@@ -1,6 +1,7 @@
 #include "controller.hpp"
 
 Controller::Controller() {
+    radio_ = RF24(22, 1, 1000000);
     radio_packet_[0] = 127;
     radio_packet_[1] = 127;
     radio_packet_[2] = 127;
