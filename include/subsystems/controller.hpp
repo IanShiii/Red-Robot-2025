@@ -19,14 +19,19 @@
 #define PACKET_BUTTONS_1 4
 #define PACKET_BUTTONS_2 5
 
-class Controller : public Subsystem<Controller> {
+class Controller : public Subsystem {
     uint8_t TARGET_ADDRESS[5] = {0xF0,0xF0,0xF0,0xF0,0xD2};
     uint8_t LOCAL_ADDRESS[5] = {0xF0,0xF0,0xF0,0xF0,0xE1};
     
     public:
+        static Controller& get_instance() {
+            static Controller instance;
+            return instance;
+        }
+        
         void loop() override;
         void log() override;
-        
+
         bool is_A_pressed();
         bool is_B_pressed();
         bool is_X_pressed();
@@ -46,7 +51,7 @@ class Controller : public Subsystem<Controller> {
         int get_d_pad();
     
     private:
-        friend class Subsystem<Controller>;
+        friend class Subsystem;
         Controller();
 
         RF24 radio_;

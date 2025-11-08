@@ -5,8 +5,13 @@
 #include "subsystem.hpp"
 #include "settings.hpp"
 
-class Drivetrain : public Subsystem<Drivetrain> {
+class Drivetrain : public Subsystem {
     public:
+        static Drivetrain& get_instance() {
+            static Drivetrain instance;
+            return instance;
+        }
+
         void loop() override;
         void log() override;
 
@@ -23,7 +28,7 @@ class Drivetrain : public Subsystem<Drivetrain> {
         void set_speed(double linear, double angular);
 
     private:
-        friend class Subsystem<Drivetrain>;
+        friend class Subsystem;
         Drivetrain();
 
         /**

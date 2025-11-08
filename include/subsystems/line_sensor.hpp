@@ -4,8 +4,13 @@
 #include "subsystem.hpp"
 #include "pins.hpp"
 
-class LineSensor : public Subsystem<LineSensor> {
+class LineSensor : public Subsystem {
     public:
+        static LineSensor& get_instance() {
+            static LineSensor instance;
+            return instance;
+        }
+        
         void loop() override;
         void log() override;
         /**
@@ -14,7 +19,7 @@ class LineSensor : public Subsystem<LineSensor> {
         double get_line_position();
 
     private:
-        friend class Subsystem<LineSensor>;
+        friend class Subsystem;
         LineSensor();
 
         // Each value is in the range [0, 3000]
