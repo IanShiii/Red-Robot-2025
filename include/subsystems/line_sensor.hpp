@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "subsystem.hpp"
+#include "settings.hpp"
 #include "pins.hpp"
 
 class LineSensor : public Subsystem {
@@ -22,9 +23,11 @@ class LineSensor : public Subsystem {
         friend class Subsystem;
         LineSensor();
 
+        static constexpr int NUM_SENSORS = 8;
+
         // Each value is in the range [0, 3000]
         // 0 means the sensor is on a very bright surface, and 3000 means the sensor is on a dark surface
-        int last_sensor_values_[6];
+        int last_sensor_values_[NUM_SENSORS];
 
         void update_sensor_values();
 };

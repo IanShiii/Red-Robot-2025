@@ -11,6 +11,11 @@
 #define DRIVETRAIN_LINEAR_DEADBAND 0.1
 #define DRIVETRAIN_ANGULAR_DEADBAND 0.1
 
+// AUTONOMOUS SETTINGS
+
+#define AUTON_LINE_FOLLOW_SPEED 0.4 // Constant forward speed while following the line
+#define AUTON_LINE_FOLLOW_KP 0.8 // Proportional gain for turning. Tune this value!
+
 // DRVIER SETTINGS
 
 #define DRIVER_LINEAR_DEADBAND 0.15

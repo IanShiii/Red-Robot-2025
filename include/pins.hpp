@@ -21,7 +21,7 @@
 
 #define RADIO_LED_PIN (28)
 
-const int LINE_SENSOR_PINS[] = { 6, 7, 8, 9, 10, 11 };
+const int LINE_SENSOR_PINS[] = { 4, 5, 6, 7, 8, 9, 10, 11 };
 
 // CONFIGURED PINS
 
