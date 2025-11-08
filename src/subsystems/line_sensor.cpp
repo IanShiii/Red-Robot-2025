@@ -1,4 +1,4 @@
-#include "line_sensor.hpp"
+#include "subsystems/line_sensor.hpp"
 
 LineSensor::LineSensor() {
     for (int i = 0; i < 6; i++) {
@@ -6,12 +6,26 @@ LineSensor::LineSensor() {
     }
 }
 
-void LineSensor::loop() {
-    update_sensor_values();
+double LineSensor::get_line_position() {
+    double weighted_sum = 0;
+    double total_value = 0;
+
+    for (int i = 0; i < 6; ++i) {
+        // Invert the value so that 0 means dark and 3000 means bright
+        double value = (3000 - last_sensor_values_[i]);
+        // Center the weights around 0. Left sensors have negative weights, right sensors have positive weights
+        // Since we have 6 sensors, the weights would be: -2.5, -1.5, -0.5, 0.5, 1.5, 2.5
+        double weight = i - (6 - 1) / 2.0;
+        weighted_sum += value * weight;
+        total_value += value;
+    }
+
+    // Normalize to [-1, 1]
+    return weighted_sum / total_value / 2.5;
 }
 
-int* LineSensor::get_sensor_values() {
-    return last_sensor_values_;
+void LineSensor::loop() {
+    update_sensor_values();
 }
 
 void LineSensor::update_sensor_values() {

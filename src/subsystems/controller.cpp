@@ -1,4 +1,4 @@
-#include "controller.hpp"
+#include "subsystems/controller.hpp"
 
 Controller::Controller() {
     radio_ = RF24(22, 1, 1000000);

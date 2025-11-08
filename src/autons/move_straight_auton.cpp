@@ -6,7 +6,7 @@ void MoveStraightAuton::init() {
     start_time_milliseconds_ = millis();
 }
 
-AutonStatus MoveStraightAuton::loop() {
+CommandStatus MoveStraightAuton::loop() {
     unsigned long elapsed_time = millis() - start_time_milliseconds_;
     
     if (elapsed_time >= DURATION_MILLISECONDS || elapsed_time >= MAX_AUTON_DURATION_MILLISECONDS) {

@@ -5,6 +5,7 @@
 #include <RF24.h>
 
 #include "pins.hpp"
+#include "subsystem.hpp"
 
 #define TEAM_NUMBER 2
 
@@ -18,18 +19,14 @@
 #define PACKET_BUTTONS_1 4
 #define PACKET_BUTTONS_2 5
 
-class Controller {
+class Controller : public Subsystem<Controller> {
     uint8_t TARGET_ADDRESS[5] = {0xF0,0xF0,0xF0,0xF0,0xD2};
     uint8_t LOCAL_ADDRESS[5] = {0xF0,0xF0,0xF0,0xF0,0xE1};
     
     public:
-        static Controller& get_instance() {
-            static Controller instance;
-            return instance;
-        }
-
-        void loop();
-
+        void loop() override;
+        void log() override;
+        
         bool is_A_pressed();
         bool is_B_pressed();
         bool is_X_pressed();
@@ -47,13 +44,9 @@ class Controller {
         float get_right_x();
         float get_right_y();
         int get_d_pad();
-
-        /**
-         * Sends any relevant information to the serial monitor for debugging
-         */
-        void log();
     
     private:
+        friend class Subsystem<Controller>;
         Controller();
 
         RF24 radio_;

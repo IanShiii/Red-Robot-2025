@@ -1,4 +1,4 @@
-#include "drivetrain.hpp"
+#include "subsystems/drivetrain.hpp"
 
 Drivetrain::Drivetrain() {
     pinMode(DRIVETRAIN_LEFT_ENABLE_PIN, OUTPUT);
@@ -6,6 +6,9 @@ Drivetrain::Drivetrain() {
     pinMode(DRIVETRAIN_LEFT_PHASE_PIN, OUTPUT);
     pinMode(DRIVETRAIN_RIGHT_PHASE_PIN, OUTPUT);
 }
+
+void Drivetrain::loop() {}
+void Drivetrain::log() {}
 
 void Drivetrain::set_speed_based_on_joysticks(double left_y, double right_x) {
     double linear_speed;
@@ -64,5 +67,3 @@ void Drivetrain::set_right_speed(double speed) {
         digitalWrite(DRIVETRAIN_RIGHT_PHASE_PIN, HIGH);
     }
 }
-
-void Drivetrain::log() {}

@@ -2,15 +2,14 @@
 
 #include <Arduino.h>
 #include "pins.hpp"
+#include "subsystem.hpp"
 #include "settings.hpp"
 
-class Drivetrain {
+class Drivetrain : public Subsystem<Drivetrain> {
     public:
-        static Drivetrain& get_instance() {
-            static Drivetrain instance;
-            return instance;
-        }
-        
+        void loop() override;
+        void log() override;
+
         /**
          * @param left_y [-1, 1] positive means forward
          * @param right_x [-1, 1] positive means CCW
@@ -23,12 +22,8 @@ class Drivetrain {
          */
         void set_speed(double linear, double angular);
 
-        /**
-         * Sends any relevant information to the serial monitor for debugging
-         */
-        void log();
-
     private:
+        friend class Subsystem<Drivetrain>;
         Drivetrain();
 
         /**

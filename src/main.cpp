@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "pins.hpp"
-#include "drivetrain.hpp"
-#include "controller.hpp"
-#include "line_sensor.hpp"
+#include "subsystems/drivetrain.hpp"
+#include "subsystems/controller.hpp"
+#include "subsystems/line_sensor.hpp"
 #include "auton.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
@@ -24,9 +24,21 @@ void setup() {
   Serial.begin(115200);
 }
 
-void loop() {
+void update_subsystems() {
   controller->loop();
   line_sensor->loop();
+  drivetrain->loop();
+}
+
+void log_subsystems() {
+  if (CONTROLLER_LOGGING_ENABLED) controller->log();
+  if (LINE_SENSOR_LOGGING_ENABLED) line_sensor->log();
+  if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
+}
+
+void loop() {
+  update_subsystems();
+  log_subsystems();
 
   if (controller->is_B_pressed() && !auton_has_ran) {
     mode = AUTONOMOUS;
@@ -34,25 +46,16 @@ void loop() {
   }
 
   if (mode == TELEOP) {
-    drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+    // drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+    drivetrain->set_speed(0.5, 0.0);
   }
 
   if (mode == AUTONOMOUS) {
-    AutonStatus autonStatus = auton.loop();
+    CommandStatus autonStatus = auton.loop();
     if (autonStatus == DONE) {
       mode = TELEOP;
       auton_has_ran = true;
     }
-  }
-
-  if (CONTROLLER_LOGGING_ENABLED) {
-    controller->log();
-  }
-  if (DRIVETRAIN_LOGGING_ENABLED) {
-    drivetrain->log();
-  }
-  if (LINE_SENSOR_LOGGING_ENABLED) {
-    line_sensor->log();
   }
   
   delay(20);
