@@ -1,0 +1,20 @@
+#pragma once
+
+#define MOTOR1_ENABLE 27
+#define MOTOR1_PHASE 26
+
+#define MOTOR2_ENABLE 21
+#define MOTOR2_PHASE 20
+
+#define MOTOR3_ENABLE 19
+#define MOTOR3_PHASE 18
+
+#define MOTOR4_ENABLE 17
+#define MOTOR4_PHASE 16
+
+#define SERVO1_PIN 15
+#define SERVO2_PIN 14
+#define SERVO3_PIN 13
+#define SERVO4_PIN 12
+
+#define RADIO_LED_PIN 28
