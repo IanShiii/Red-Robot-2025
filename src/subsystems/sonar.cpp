@@ -1,6 +1,6 @@
 #include "subsystems/sonar.hpp"
 
-Sonar::Sonar() : sonar_(ULTRASONIC_TRIG, ULTRASONIC_ECHO) {}
+Sonar::Sonar() : sonar_(ULTRASONIC_TRIG_PIN, ULTRASONIC_ECHO_PIN) {}
 
 void Sonar::loop() {}
 void Sonar::log() {
