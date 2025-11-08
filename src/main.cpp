@@ -3,6 +3,8 @@
 #include "subsystems/drivetrain.hpp"
 #include "subsystems/controller.hpp"
 #include "subsystems/line_sensor.hpp"
+#include "subsystems/elevator.hpp"
+#include "subsystems/gate.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
 
@@ -11,6 +13,8 @@ Mode mode = TELEOP;
 Drivetrain* drivetrain;
 Controller* controller;
 LineSensor* line_sensor;
+Elevator* elevator;
+Gate* gate;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -19,6 +23,8 @@ void setup() {
   drivetrain = &Drivetrain::get_instance();
   controller = &Controller::get_instance();
   line_sensor = &LineSensor::get_instance();
+  elevator = &Elevator::get_instance();
+  gate = &Gate::get_instance();
 
   Serial.begin(115200);
 }
@@ -27,13 +33,19 @@ void update_subsystems() {
   controller->loop();
   line_sensor->loop();
   drivetrain->loop();
+  elevator->loop();
+  gate->loop();
 }
 
 void log_subsystems() {
   if (CONTROLLER_LOGGING_ENABLED) controller->log();
   if (LINE_SENSOR_LOGGING_ENABLED) line_sensor->log();
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
+  if (ELEVATOR_LOGGING_ENABLED) elevator->log();
+  if (GATE_LOGGING_ENABLED) gate->log();
 }
+
+double gate_angle = 0;
 
 void loop() {
   update_subsystems();

@@ -62,8 +62,6 @@ void Controller::loop() {
       Serial.println();*/
     }
   }
-
-  log();
 }
 
 bool Controller::is_A_pressed() {
