@@ -1,8 +1,10 @@
 #pragma once
 
 #include <Arduino.h>
+#include "drivetrain.hpp"
+#include "line_sensor.hpp"
 
-#define AUTON_DURATION_MILLISECONDS 20000 // 20 seconds
+#define MAX_AUTON_DURATION_MILLISECONDS 20000 // 20 seconds
 
 enum AutonStatus {IN_PROGRESS, DONE};
 
@@ -21,9 +23,11 @@ class Auton {
         virtual void on_exit() = 0;
 };
 
-class Auton1 : public Auton<Auton1> {
+class MoveStraightAuton : public Auton<MoveStraightAuton> {
+    double DURATION_MILLISECONDS = 10000; // 10 seconds
+
     public:
-        Auton1();
+        MoveStraightAuton();
         void init() override;
         AutonStatus loop() override;
 
