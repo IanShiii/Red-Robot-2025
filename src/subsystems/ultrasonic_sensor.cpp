@@ -24,15 +24,15 @@ void UltrasonicSensor::loop() {
     // 4. Calculate the distance in inches.
     //    Speed of sound is ~1130 ft/s, which is ~74 us/inch.
     //    The pulse travels to the object and back, so we divide by 2.
-    last_distance_cm_ = duration_us / 74.0 / 2.0;
+    last_distance_in_ = duration_us / 74.0 / 2.0;
 }
 
-double UltrasonicSensor::get_distance_cm() {
-    return last_distance_cm_;
+double UltrasonicSensor::get_distance_in() {
+    return last_distance_in_;
 }
 
 void UltrasonicSensor::log() {
     Serial.print("Sonar Distance: ");
-    Serial.print(get_distance_cm());
+    Serial.print(get_distance_in());
     Serial.println(" in");
 }
