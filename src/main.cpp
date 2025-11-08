@@ -5,6 +5,7 @@
 #include "subsystems/line_sensor.hpp"
 #include "subsystems/elevator.hpp"
 #include "subsystems/gate.hpp"
+#include "subsystems/sonar.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
 
@@ -15,6 +16,7 @@ Controller* controller;
 LineSensor* line_sensor;
 Elevator* elevator;
 Gate* gate;
+Sonar* sonar;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -25,6 +27,7 @@ void setup() {
   line_sensor = &LineSensor::get_instance();
   elevator = &Elevator::get_instance();
   gate = &Gate::get_instance();
+  sonar = &Sonar::get_instance();
 
   Serial.begin(115200);
 }
@@ -35,6 +38,7 @@ void update_subsystems() {
   drivetrain->loop();
   elevator->loop();
   gate->loop();
+  sonar->loop();
 }
 
 void log_subsystems() {
@@ -43,9 +47,8 @@ void log_subsystems() {
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
   if (ELEVATOR_LOGGING_ENABLED) elevator->log();
   if (GATE_LOGGING_ENABLED) gate->log();
+  if (SONAR_LOGGING_ENABLED) sonar->log();
 }
-
-double gate_angle = 0;
 
 void loop() {
   update_subsystems();

@@ -21,6 +21,9 @@
 
 #define RADIO_LED_PIN (28)
 
+#define ULTRASONIC_TRIG (4)
+#define ULTRASONIC_ECHO (5)
+
 const int LINE_SENSOR_PINS[] = { 6, 7, 8, 9, 10, 11 };
 
 // CONFIGURED PINS
