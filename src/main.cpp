@@ -13,6 +13,7 @@ Controller* controller;
 LineSensor* line_sensor;
 
 bool auton_has_ran = false;
+double auton_start_time;
 
 void setup() {
   drivetrain = &Drivetrain::get_instance();
@@ -38,22 +39,25 @@ void loop() {
   update_subsystems();
   log_subsystems();
 
-  // if (controller->is_B_pressed() && !auton_has_ran) {
-  //   mode = AUTONOMOUS;
-  //   auton.init();
-  // }
+  if (controller->is_B_pressed() && !auton_has_ran) {
+    mode = AUTONOMOUS;
+    auton_start_time = millis();
+  }
 
   if (mode == TELEOP) {
     drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
   }
 
-  // if (mode == AUTONOMOUS) {
-  //   CommandStatus autonStatus = auton.loop();
-  //   if (autonStatus == DONE) {
-  //     mode = TELEOP;
-  //     auton_has_ran = true;
-  //   }
-  // }
+  if (mode == AUTONOMOUS) {
+    double elapsed = (millis() - auton_start_time) / 1000.0;
+
+    if (elapsed < 3.0) {
+      drivetrain->set_speed(0.5, 0.0);
+    } else {
+      mode = TELEOP;
+      auton_has_ran = true;
+    }
+  }
   
   delay(20);
 }
