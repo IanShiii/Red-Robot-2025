@@ -22,15 +22,12 @@ pio run --target upload
 
 The repository is organized as follows:
 
--   `src/`: Contains the main source code files (`.cpp`).
-    -   `main.cpp`: The entry point of the program, containing the primary robot loop.
-    -   `drivetrain.cpp`: Implementation for the robot's drivetrain and movement functions.
-    -   `controller.cpp`: Implementation for handling input from the remote controller.
-    -   `autons/`: Directory containing specific autonomous routines.
+-   `src/`: Contains the implementation files (`.cpp`).
+    -   `main.cpp`: The entry point of the program. It initializes all subsystems and contains the main robot loop.
+    -   `subsystems/`: Directory containing the implementation for each robot subsystem (e.g., `drivetrain.cpp`, `elevator.cpp`).
 -   `include/`: Contains all header files (`.hpp`).
-    -   `drivetrain.hpp`: Header for the drivetrain.
-    -   `controller.hpp`: Header for the controller.
-    -   `auton.hpp`: Header for autonomous functions.
+    -   `subsystems/`: Directory containing the header files for each robot subsystem.
+        -   `subsystem.hpp`: A base class that defines the common interface for all subsystems.
     -   `pins.hpp`: Defines all microcontroller pin assignments for motors, sensors, and other peripherals.
     -   `settings.hpp`: Contains global settings, constants, and tuning variables for the robot.
 -   `lib/`: For local project libraries. Dependencies are primarily managed by PlatformIO in `platformio.ini`.
@@ -39,14 +36,22 @@ The repository is organized as follows:
 
 ### Code Overview
 
--   **main.cpp**: This file contains the `setup()` and `loop()` functions. `setup()` is run once at the start, and `loop()` is run repeatedly. The main robot logic, which calls functions from other modules based on the robot's state (e.g., autonomous or driver-controlled), resides here.
+-   **`main.cpp`**: This file contains the `setup()` and `loop()` functions. It is responsible for initializing all subsystems and managing the high-level robot state (e.g., switching between autonomous and tele-operated modes).
 
--   **Drivetrain**: The `drivetrain.hpp` and `drivetrain.cpp` files manage the robot's mobility. This includes functions to control the motors, read encoders, and execute movements.
-
--   **Controller**: The `controller.hpp` and `controller.cpp` files interface with the remote control, translating joystick and button inputs into actions for the robot to perform during the driver-controlled period.
-
--   **Autonomous**: The `auton.hpp` header declares functions for autonomous mode, and the `.cpp` files in `src/autons/` define the specific sequences of actions for different autonomous routines.
+-   **Subsystem Architecture**: The robot's functionality is organized into modular `Subsystem` classes. Each subsystem is implemented as a **singleton**, ensuring there is only one instance controlling its specific hardware. This design keeps the code organized and prevents conflicting commands. The current subsystems include:
+    -   **`Drivetrain`**: Manages the robot's mobility.
+    -   **`Controller`**: Interfaces with the RF24 remote control to get driver inputs.
+    -   **`Elevator`**: Controls the elevator mechanism.
+    -   **`Gate`**: Controls the servo-actuated gate.
+    -   **`LineSensor`**: Manages the line-following sensor array.
+    -   **`Sonar`**: Manages the ultrasonic distance sensor.
 
 -   **Configuration**:
     -   `pins.hpp` is used to map the physical pins of the microcontroller to their functions on the robot. This provides a single place to manage hardware wiring.
     -   `settings.hpp` stores important variables like motor speeds, sensor thresholds, and other tunable parameters.
+
+### Subsystem Pattern
+
+All hardware-related code is encapsulated within a "subsystem" class that inherits from `Subsystem`. Each subsystem is a singleton, accessed via a static `get_instance()` method. This ensures that all parts of the code are interacting with the same object for a given piece of hardware.
+
+The main loop in `main.cpp` calls the `loop()` method on each subsystem, allowing them to perform their periodic tasks.
