@@ -26,6 +26,7 @@ The repository is organized as follows:
     -   `main.cpp`: The entry point of the program. It initializes all subsystems and contains the main robot loop.
     -   `subsystems/`: Directory containing the implementation for each robot subsystem (e.g., `drivetrain.cpp`, `elevator.cpp`).
 -   `include/`: Contains all header files (`.hpp`).
+    -   `commands.hpp`: Contains high-level robot actions that combine calls to multiple subsystems.
     -   `subsystems/`: Directory containing the header files for each robot subsystem.
         -   `subsystem.hpp`: A base class that defines the common interface for all subsystems.
     -   `pins.hpp`: Defines all microcontroller pin assignments for motors, sensors, and other peripherals.
@@ -44,7 +45,9 @@ The repository is organized as follows:
     -   **`Elevator`**: Controls the elevator mechanism.
     -   **`Gate`**: Controls the servo-actuated gate.
     -   **`LineSensor`**: Manages the line-following sensor array.
-    -   **`Sonar`**: Manages the ultrasonic distance sensor.
+    -   **`UltrasonicSensor`**: Manages the ultrasonic distance sensor.
+
+-   **`commands.hpp`**: This file defines reusable, high-level robot behaviors (e.g., `follow_line()`). These functions orchestrate actions across multiple subsystems to perform a complex task.
 
 -   **Configuration**:
     -   `pins.hpp` is used to map the physical pins of the microcontroller to their functions on the robot. This provides a single place to manage hardware wiring.
