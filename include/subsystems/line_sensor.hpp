@@ -1,8 +1,10 @@
 #pragma once
 
 #include <Arduino.h>
+#include <optional>
 #include "subsystem.hpp"
 #include "pins.hpp"
+#include "settings.hpp"
 
 class LineSensor : public Subsystem {
     public:
@@ -14,9 +16,10 @@ class LineSensor : public Subsystem {
         void loop() override;
         void log() override;
         /**
-         * @return A position from [-1, 1] where -1 means the line is at the far left, and 1 means the line is at the far right of the robot
+         * @return A position from [-1, 1] where -1 means the line is at the far left, and 1 means the line is at the far right of the robot.
+         * If the line is not detected, returns std::nullopt
          */
-        double get_line_position();
+        std::optional<double> get_line_position();
 
     private:
         friend class Subsystem;
@@ -27,4 +30,5 @@ class LineSensor : public Subsystem {
         int last_sensor_values_[6];
 
         void update_sensor_values();
+        bool is_line_detected();
 };

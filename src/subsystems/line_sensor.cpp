@@ -6,7 +6,22 @@ LineSensor::LineSensor() {
     }
 }
 
-double LineSensor::get_line_position() {
+void LineSensor::loop() {
+    update_sensor_values();
+}
+
+void LineSensor::log() {
+    Serial.print("Line Sensor Values: ");
+    for (int i = 0; i < 6; ++i) {
+        Serial.print(last_sensor_values_[i]);
+        if (i < 5) {
+            Serial.print(", ");
+        }
+    }
+    Serial.println();
+}
+
+std::optional<double> LineSensor::get_line_position() {
     double weighted_sum = 0;
     double total_value = 0;
 
@@ -22,10 +37,6 @@ double LineSensor::get_line_position() {
 
     // Normalize to [-1, 1]
     return weighted_sum / total_value / 2.5;
-}
-
-void LineSensor::loop() {
-    update_sensor_values();
 }
 
 void LineSensor::update_sensor_values() {
@@ -44,13 +55,11 @@ void LineSensor::update_sensor_values() {
     }
 }
 
-void LineSensor::log() {
-    Serial.print("Line Sensor Values: ");
+bool LineSensor::is_line_detected() {
     for (int i = 0; i < 6; ++i) {
-        Serial.print(last_sensor_values_[i]);
-        if (i < 5) {
-            Serial.print(", ");
+        if (last_sensor_values_[i] < WHITE_THRESHOLD || last_sensor_values_[i] > BLACK_THRESHOLD) { 
+            return true;
         }
     }
-    Serial.println();
+    return false;
 }
