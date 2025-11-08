@@ -18,29 +18,15 @@ void LineSensor::log() {
             Serial.print(", ");
         }
     }
+    Serial.print(" | Line Detected on Left: ");
+    Serial.print(is_black_line_detected_on_left() ? "Yes" : "No");
+    Serial.print(" | Line Detected on Right: ");
+    Serial.print(is_black_line_detected_on_right() ? "Yes" : "No");
     Serial.println();
 }
 
-std::optional<double> LineSensor::get_line_position() {
-    double weighted_sum = 0;
-    double total_value = 0;
-
-    for (int i = 0; i < NUM_SENSORS; ++i) {
-        // Invert the value so that 0 means dark and 3000 means bright
-        double value = (SENSOR_MAX_VALUE - last_sensor_values_[i]);
-        // Center the weights around 0. Left sensors have negative weights, right sensors have positive weights
-        // Since we have 6 sensors, the weights would be: -2.5, -1.5, -0.5, 0.5, 1.5, 2.5
-        double weight = i - (NUM_SENSORS - 1) / 2.0;
-        weighted_sum += value * weight;
-        total_value += value;
-    }
-
-    // Normalize to [-1, 1]
-    return weighted_sum / total_value / ((NUM_SENSORS - 1) / 2.0);
-}
-
 void LineSensor::update_sensor_values() {
-    for (int i = 0; i < NUM_SENSORS; ++i) {
+    for (int i = 1; i < NUM_SENSORS; ++i) {
         pinMode(LINE_SENSOR_PINS[i], OUTPUT);
         digitalWrite(LINE_SENSOR_PINS[i], HIGH);
         delay(1);
@@ -55,11 +41,38 @@ void LineSensor::update_sensor_values() {
     }
 }
 
-bool LineSensor::is_line_detected() {
-    for (int i = 0; i < NUM_SENSORS; ++i) {
-        if (last_sensor_values_[i] < WHITE_THRESHOLD || last_sensor_values_[i] > BLACK_THRESHOLD) { 
+bool LineSensor::is_black_line_detected_on_left() {
+    // If its detected on the right, return false
+    for (int i = 3; i < NUM_SENSORS; ++i) {
+        if (last_sensor_values_[i] < BLACK_THRESHOLD) { 
+            return false;
+        }
+    }
+
+    // If its detected on the left, return true
+    for (int i = 1; i < 3; ++i) {
+        if (last_sensor_values_[i] < BLACK_THRESHOLD) { 
             return true;
         }
     }
+
+    return false;
+}
+
+bool LineSensor::is_black_line_detected_on_right() {
+    // If its detected on the left, return false
+    for (int i = 1; i < 3; ++i) {
+        if (last_sensor_values_[i] < BLACK_THRESHOLD) { 
+            return false;
+        }
+    }
+
+    // If its detected on the right, return true
+    for (int i = 3; i < NUM_SENSORS; ++i) {
+        if (last_sensor_values_[i] < BLACK_THRESHOLD) { 
+            return true;
+        }
+    }
+    
     return false;
 }

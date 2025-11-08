@@ -6,6 +6,7 @@
 #include "subsystems/elevator.hpp"
 #include "subsystems/gate.hpp"
 #include "subsystems/ultrasonic_sensor.hpp"
+#include "commands.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
 
@@ -16,7 +17,7 @@ Controller* controller;
 LineSensor* line_sensor;
 Elevator* elevator;
 Gate* gate;
-UltrasonicSensor* ultrasonic_sensor;
+// UltrasonicSensor* ultrasonic_sensor;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -27,7 +28,7 @@ void setup() {
   line_sensor = &LineSensor::get_instance();
   elevator = &Elevator::get_instance();
   gate = &Gate::get_instance();
-  ultrasonic_sensor = &UltrasonicSensor::get_instance();
+  // ultrasonic_sensor = &UltrasonicSensor::get_instance();
 
   Serial.begin(115200);
 }
@@ -38,7 +39,7 @@ void update_subsystems() {
   drivetrain->loop();
   elevator->loop();
   gate->loop();
-  ultrasonic_sensor->loop();
+  // ultrasonic_sensor->loop();
 }
 
 void log_subsystems() {
@@ -47,34 +48,34 @@ void log_subsystems() {
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
   if (ELEVATOR_LOGGING_ENABLED) elevator->log();
   if (GATE_LOGGING_ENABLED) gate->log();
-  if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
+  // if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
 }
-
-double gate_angle = 0;
 
 void loop() {
   update_subsystems();
   log_subsystems();
 
-  if (controller->is_B_pressed() && !auton_has_ran) {
-    mode = AUTONOMOUS;
-    auton_start_time = millis();
-  }
+  commands::follow_line();
 
-  if (mode == TELEOP) {
-    drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
-  }
+  // if (controller->is_B_pressed() && !auton_has_ran) {
+  //   mode = AUTONOMOUS;
+  //   auton_start_time = millis();
+  // }
 
-  if (mode == AUTONOMOUS) {
-    double elapsed = (millis() - auton_start_time) / 1000.0;
+  // if (mode == TELEOP) {
+  //   drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+  // }
 
-    if (elapsed < 3.0) {
-      drivetrain->set_speed(0.5, 0.0);
-    } else {
-      mode = TELEOP;
-      auton_has_ran = true;
-    }
-  }
+  // if (mode == AUTONOMOUS) {
+  //   double elapsed = (millis() - auton_start_time) / 1000.0;
+
+  //   if (elapsed < 3.0) {
+  //     drivetrain->set_speed(0.5, 0.0);
+  //   } else {
+  //     mode = TELEOP;
+  //     auton_has_ran = true;
+  //   }
+  // }
   
   delay(20);
 }

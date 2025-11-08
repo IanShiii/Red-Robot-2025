@@ -15,24 +15,20 @@ class LineSensor : public Subsystem {
         
         void loop() override;
         void log() override;
-        /**
-         * @return A position from [-1, 1] where -1 means the line is at the far left, and 1 means the line is at the far right of the robot.
-         * If the line is not detected, returns std::nullopt
-         */
-        std::optional<double> get_line_position();
+        
+        bool is_black_line_detected_on_left();
+        bool is_black_line_detected_on_right();
 
     private:
         friend class Subsystem;
         LineSensor();
 
         static constexpr int NUM_SENSORS = 6;
-        static constexpr int SENSOR_MAX_VALUE = 3000;
         static constexpr int SENSOR_READ_TIMEOUT_US = 10000;
 
-        // Each value is in the range [0, 3000]
-        // 0 means the sensor is on a very bright surface, and 3000 means the sensor is on a dark surface
+        // Each value is in the range [0, 10000]
+        // 0 means the sensor is on a dark surface, and 10000 means the sensor is on a bright surface
         int last_sensor_values_[NUM_SENSORS];
 
         void update_sensor_values();
-        bool is_line_detected();
 };

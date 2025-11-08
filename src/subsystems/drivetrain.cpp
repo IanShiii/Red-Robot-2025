@@ -52,9 +52,9 @@ void Drivetrain::set_left_speed(double speed) {
     double constrained_speed = constrain(speed, -1.0, 1.0);
     analogWrite(DRIVETRAIN_LEFT_ENABLE_PIN, int(255 * abs(constrained_speed)));
     if (constrained_speed > 0.0) {
-        digitalWrite(DRIVETRAIN_LEFT_PHASE_PIN, HIGH);
-    } else {
         digitalWrite(DRIVETRAIN_LEFT_PHASE_PIN, LOW);
+    } else {
+        digitalWrite(DRIVETRAIN_LEFT_PHASE_PIN, HIGH);
     }
 }
 
@@ -62,8 +62,8 @@ void Drivetrain::set_right_speed(double speed) {
     double constrained_speed = constrain(speed, -1.0, 1.0);
     analogWrite(DRIVETRAIN_RIGHT_ENABLE_PIN, int(255 * abs(constrained_speed)));
     if (constrained_speed > 0.0) {
-        digitalWrite(DRIVETRAIN_RIGHT_PHASE_PIN, LOW);
-    } else {
         digitalWrite(DRIVETRAIN_RIGHT_PHASE_PIN, HIGH);
+    } else {
+        digitalWrite(DRIVETRAIN_RIGHT_PHASE_PIN, LOW);
     }
 }
