@@ -44,6 +44,16 @@ void loop() {
       auton_has_ran = true;
     }
   }
+
+  if (CONTROLLER_LOGGING_ENABLED) {
+    controller->log();
+  }
+  if (DRIVETRAIN_LOGGING_ENABLED) {
+    drivetrain->log();
+  }
+  if (LINE_SENSOR_LOGGING_ENABLED) {
+    line_sensor->log();
+  }
   
   delay(20);
 }

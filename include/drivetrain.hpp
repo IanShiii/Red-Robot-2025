@@ -23,6 +23,11 @@ class Drivetrain {
          */
         void set_speed(double linear, double angular);
 
+        /**
+         * Sends any relevant information to the serial monitor for debugging
+         */
+        void log();
+
     private:
         Drivetrain();
 

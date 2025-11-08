@@ -29,3 +29,14 @@ void LineSensor::update_sensor_values() {
         last_sensor_values_[i] = diff;
     }
 }
+
+void LineSensor::log() {
+    Serial.print("Line Sensor Values: ");
+    for (int i = 0; i < 6; ++i) {
+        Serial.print(last_sensor_values_[i]);
+        if (i < 5) {
+            Serial.print(", ");
+        }
+    }
+    Serial.println();
+}

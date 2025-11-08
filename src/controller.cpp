@@ -62,6 +62,8 @@ void Controller::loop() {
       Serial.println();*/
     }
   }
+
+  log();
 }
 
 bool Controller::is_A_pressed() {
@@ -178,4 +180,15 @@ bool Controller::is_packet_valid(uint8_t *pkt) {
   if(sum != pkt[14]) return false;
   
   return true;
+}
+
+void Controller::log() {
+    Serial.print("Left X: ");
+    Serial.print(get_left_x());
+    Serial.print(" Left Y: ");
+    Serial.print(get_left_y());
+    Serial.print(" Right X: ");
+    Serial.print(get_right_x());
+    Serial.print(" Right Y: ");
+    Serial.println(get_right_y());
 }

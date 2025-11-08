@@ -64,3 +64,5 @@ void Drivetrain::set_right_speed(double speed) {
         digitalWrite(DRIVETRAIN_RIGHT_PHASE_PIN, HIGH);
     }
 }
+
+void Drivetrain::log() {}

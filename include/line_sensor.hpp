@@ -10,8 +10,17 @@ class LineSensor {
             return instance;
         }
         
+        /**
+         * Updates the sensor values. Should be called in the main loop.
+         */
         void loop();
+
         int* get_sensor_values();
+
+        /**
+         * Sends any relevant information to the serial monitor for debugging
+         */
+        void log();
 
     private:
         LineSensor();

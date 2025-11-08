@@ -47,6 +47,11 @@ class Controller {
         float get_right_x();
         float get_right_y();
         int get_d_pad();
+
+        /**
+         * Sends any relevant information to the serial monitor for debugging
+         */
+        void log();
     
     private:
         Controller();
