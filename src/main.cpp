@@ -54,28 +54,37 @@ void log_subsystems() {
 void loop() {
   update_subsystems();
   log_subsystems();
-
-  commands::follow_line();
-
-  // if (controller->is_B_pressed() && !auton_has_ran) {
-  //   mode = AUTONOMOUS;
-  //   auton_start_time = millis();
-  // }
-
-  // if (mode == TELEOP) {
-  //   drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
-  // }
-
-  // if (mode == AUTONOMOUS) {
-  //   double elapsed = (millis() - auton_start_time) / 1000.0;
-
-  //   if (elapsed < 3.0) {
-  //     drivetrain->set_speed(0.5, 0.0);
-  //   } else {
-  //     mode = TELEOP;
-  //     auton_has_ran = true;
-  //   }
-  // }
+  
+  // Press 'B' on the controller to start the one-time autonomous routine.
+  if (controller->is_B_pressed() && !auton_has_ran) {
+    mode = AUTONOMOUS;
+    auton_start_time = millis();
+  }
+  
+  if (mode == TELEOP) {
+    // Standard tele-operated driving
+    drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+    
+    // Elevator controls using the shoulder buttons
+    if (controller->is_RB_pressed()) {
+      elevator->set_speed(1.0); // Raise elevator
+    } else if (controller->is_LB_pressed()) {
+      elevator->set_speed(-1.0); // Lower elevator
+    } else {
+      elevator->set_speed(0.0); // Stop elevator if no buttons are pressed
+    }
+  }
+  
+  if (mode == AUTONOMOUS) {
+    double elapsed = (millis() - auton_start_time) / 1000.0;
+    
+    if (elapsed < 3.0) { // Run autonomous for 3 seconds
+      commands::follow_line();
+    } else {
+      mode = TELEOP;
+      auton_has_ran = true;
+    }
+  }
   
   delay(20);
 }
