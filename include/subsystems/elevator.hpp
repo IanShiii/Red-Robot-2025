@@ -15,12 +15,14 @@ class Elevator : public Subsystem {
         void loop() override;
         void log() override;
 
-    private:
-        friend class Subsystem;
-        Elevator();
-
+        // This method is public to allow control from main.cpp or commands.
         /**
          * @param speed [-1, 1] negative means going down, positive means going up
          */
         void set_speed(double speed);
+
+    private:
+        // The constructor is private to enforce the singleton pattern.
+        friend class Subsystem;
+        Elevator();
 };
