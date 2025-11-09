@@ -63,6 +63,28 @@ The repository is organized as follows:
     -   `pins.hpp` is used to map the physical pins of the microcontroller to their functions on the robot. This provides a single place to manage hardware wiring.
     -   `settings.hpp` stores important variables like motor speeds, sensor thresholds, and other tunable parameters.
 
+### Hardware Wiring Guide
+
+To ensure the robot functions correctly, verify that all components are wired to the Raspberry Pi Pico according to the following pin assignments. The logical names (e.g., `MOTOR1`) are defined in `include/pins.hpp`.
+
+-   **Drivetrain (Left):** `MOTOR3`
+    -   Enable Pin: `GPIO 19`
+    -   Phase Pin: `GPIO 18`
+-   **Drivetrain (Right):** `MOTOR4`
+    -   Enable Pin: `GPIO 17`
+    -   Phase Pin: `GPIO 16`
+-   **Elevator:** `MOTOR1`
+    -   Enable Pin: `GPIO 27`
+    -   Phase Pin: `GPIO 26`
+-   **Ultrasonic Sensor:**
+    -   Trig Pin: `GPIO 4`
+    -   Echo Pin: `GPIO 5`
+-   **Line Sensor Array:**
+    -   Sensors 0-5: `GPIO 6` through `GPIO 11`
+-   **RF24 Radio:**
+    -   CE: `GPIO 22`
+    -   CSN: `GPIO 1`
+
 ### Subsystem Pattern
 
 All hardware-related code is encapsulated within a "subsystem" class that inherits from `Subsystem`. Each subsystem is a singleton, accessed via a static `get_instance()` method. This ensures that all parts of the code are interacting with the same object for a given piece of hardware.

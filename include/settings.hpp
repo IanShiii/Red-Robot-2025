@@ -7,6 +7,7 @@
 #define DRIVETRAIN_LOGGING_ENABLED false
 #define ELEVATOR_LOGGING_ENABLED false
 #define PUSHER_LOGGING_ENABLED false
+#define GATE_LOGGING_ENABLED false
 #define SONAR_LOGGING_ENABLED false
 
 // SUBSYSTEMS
@@ -16,10 +17,12 @@
 
 #define PUSHER_RETRACTED_ANGLE 63
 #define PUSHER_EXTENDED_ANGLE 0
+// Gravity compensation for the elevator motor to hold position.
+// This value will need to be tuned experimentally.
+#define ELEVATOR_kG 0.0
 
-#define BLACK_THRESHOLD 4000
-
-#define ELEVATOR_kG 0.1
+#define GATE_CLOSE_ANGLE 0
+#define GATE_OPEN_ANGLE 0
 
 // LINE FOLLOWING
 
