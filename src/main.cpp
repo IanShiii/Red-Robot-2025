@@ -3,8 +3,7 @@
 #include "settings.hpp"
 #include "subsystems/drivetrain.hpp"
 #include "subsystems/controller.hpp"
-#include "subsystems/shoulder.hpp"
-#include "subsystems/wrist.hpp"
+#include "subsystems/arm.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
 
@@ -12,8 +11,7 @@ Mode mode = TELEOP;
 
 Drivetrain* drivetrain;
 Controller* controller;
-Shoulder* shoulder;
-Wrist* wrist;
+Arm* arm;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -21,24 +19,26 @@ double auton_start_time;
 void setup() {
   drivetrain = &Drivetrain::get_instance();
   controller = &Controller::get_instance();
-  shoulder = &Shoulder::get_instance();
-  wrist = &Wrist::get_instance();
-  
+  arm = &Arm::get_instance();
   Serial.begin(115200);
 }
 
 void update_subsystems() {
   controller->loop();
   drivetrain->loop();
-  shoulder->loop();
-  wrist->loop();
+  arm->loop();
 }
 
 void log_subsystems() {
   if (CONTROLLER_LOGGING_ENABLED) controller->log();
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
-  if (SHOULDER_LOGGING_ENABLED) shoulder->log();
-  if (WRIST_LOGGING_ENABLED) wrist->log();
+  if (ARM_LOGGING_ENABLED) arm->log();
+}
+
+bool arm_is_in_ready_to_score_position() {
+  return arm->get_state() == ArmState::LEVEL_3_READY ||
+         arm->get_state() == ArmState::LEVEL_2_READY ||
+         arm->get_state() == ArmState::LEVEL_1_READY;
 }
 
 void loop() {
@@ -54,14 +54,55 @@ void loop() {
   if (mode == TELEOP) {
     drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
 
-    // RT extend the shoulder and wrist for pickup.
-    // Releasing sends the shoulder and wrist back to the ready position.
+    // RT is the pickup button
+    // Releasing RT will return the arm to the ready position
+
     if (controller->is_RT_pressed()) {
-      shoulder->set_state(ShoulderState::ACTIVE_PICKUP);
-      wrist->set_state(WristState::ACTIVE_PICKUP);
-    } else if (shoulder->get_state() == ShoulderState::ACTIVE_PICKUP) {
-      shoulder->set_state(ShoulderState::READY_PICKUP);
-      wrist->set_state(WristState::READY_PICKUP);
+      arm->set_state(ArmState::ACTIVE_PICKUP);
+    } else if (arm->get_state() == ArmState::ACTIVE_PICKUP) {
+      arm->set_state(ArmState::READY_PICKUP);
+    }
+
+    // Pressing LT will score the arm if it is in the ready to score position.
+    // Releasing LT will return the arm to the corresponding ready position.
+    if (controller->is_LT_pressed()) {
+      if (arm_is_in_ready_to_score_position()) {
+        switch (arm->get_state()) {
+          case ArmState::LEVEL_3_READY:
+            arm->set_state(ArmState::LEVEL_3_SCORE);
+            break;
+          case ArmState::LEVEL_2_READY:
+            arm->set_state(ArmState::LEVEL_2_SCORE);
+            break;
+          case ArmState::LEVEL_1_READY:
+            arm->set_state(ArmState::LEVEL_1_SCORE);
+            break;
+        }
+      }
+    } else {
+      switch (arm->get_state()) {
+        case ArmState::LEVEL_3_SCORE:
+          arm->set_state(ArmState::LEVEL_3_READY);
+          break;
+        case ArmState::LEVEL_2_SCORE:
+          arm->set_state(ArmState::LEVEL_2_READY);
+          break;
+        case ArmState::LEVEL_1_SCORE:
+          arm->set_state(ArmState::LEVEL_1_READY);
+          break;
+        default:
+          // Do nothing, the arm is not in a scoring state
+          break;
+      }
+    }
+
+    // Pressing Y, X, or A will move the arm to the corresponding level's ready position.
+    if (controller->is_Y_pressed()) {
+      arm->set_state(ArmState::LEVEL_3_READY);
+    } else if (controller->is_X_pressed()) {
+      arm->set_state(ArmState::LEVEL_2_READY);
+    } else if (controller->is_A_pressed()) {
+      arm->set_state(ArmState::LEVEL_1_READY);
     }
   }
 
