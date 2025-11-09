@@ -36,4 +36,4 @@ const int LINE_SENSOR_PINS[] = { 6, 7, 8, 9, 10, 11 };
 #define ELEVATOR_ENABLE_PIN MOTOR3_ENABLE // TODO: find correct pin
 #define ELEVATOR_PHASE_PIN MOTOR3_PHASE // TODO: find correct pin
 
-#define GATE_SERVO_PIN SERVO1_PIN // TODO: find correct pin
+#define PUSHER_SERVO_PIN SERVO1_PIN
