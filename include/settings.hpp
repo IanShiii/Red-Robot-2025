@@ -7,7 +7,6 @@
 #define ELEVATOR_LOGGING_ENABLED false
 #define PUSHER_LOGGING_ENABLED false
 #define GATE_LOGGING_ENABLED false
-#define SONAR_LOGGING_ENABLED false
 
 // SUBSYSTEMS
 

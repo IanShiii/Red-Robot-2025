@@ -3,7 +3,6 @@
 #include "subsystems/drivetrain.hpp"
 #include "subsystems/controller.hpp"
 #include "subsystems/elevator.hpp"
-#include "subsystems/ultrasonic_sensor.hpp"
 
 enum Mode {AUTONOMOUS, TELEOP};
 
@@ -12,7 +11,6 @@ Mode mode = TELEOP;
 Drivetrain* drivetrain;
 Controller* controller;
 Elevator* elevator;
-UltrasonicSensor* ultrasonic_sensor;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -21,7 +19,6 @@ void setup() {
   drivetrain = &Drivetrain::get_instance();
   controller = &Controller::get_instance();
   elevator = &Elevator::get_instance();
-  ultrasonic_sensor = &UltrasonicSensor::get_instance();
   
   Serial.begin(115200);
 }
@@ -30,14 +27,12 @@ void update_subsystems() {
   controller->loop();
   drivetrain->loop();
   elevator->loop();
-  ultrasonic_sensor->loop();
 }
 
 void log_subsystems() {
   if (CONTROLLER_LOGGING_ENABLED) controller->log();
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
   if (ELEVATOR_LOGGING_ENABLED) elevator->log();
-  if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
 }
 
 void loop() {
