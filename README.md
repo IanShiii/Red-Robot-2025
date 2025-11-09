@@ -2,6 +2,15 @@
 
 This repository contains the C++ source code for the 2025 competition robot, "Red Robot". The project is developed using the PlatformIO IDE.
 
+## Subsystem Toggles for Testing
+
+To simplify testing and debugging, the `LineSensor` and `UltrasonicSensor` can be enabled or disabled at compile time. This is useful for isolating other subsystems without interference.
+
+1.  Open the file `include/settings.hpp`.
+2.  Find the `SUBSYSTEM ENABLE/DISABLE TOGGLES` section.
+3.  Change `LINE_SENSOR_ENABLED` or `ULTRASONIC_SENSOR_ENABLED` from `false` to `true` to enable a subsystem.
+4.  Recompile and upload the code.
+
 ## Latest Changes: Ultrasonic Sensor Overhaul
 
 The `UltrasonicSensor` subsystem was recently refactored to address a critical performance issue and improve overall robustness.
@@ -47,13 +56,12 @@ The repository is organized as follows:
 
 ### Code Overview
 
--   **`main.cpp`**: This file contains the `setup()` and `loop()` functions. It initializes all subsystems and runs the main control loop. It is currently configured to execute the `follow_line` command for testing, with the tele-op and mode-switching logic temporarily disabled.
+-   **`main.cpp`**: The entry point of the program. It initializes all subsystems and contains the main robot loop, which manages the state between `TELEOP` and `AUTONOMOUS` modes.
 
 -   **Subsystem Architecture**: The robot's functionality is organized into modular `Subsystem` classes. Each subsystem is implemented as a **singleton**, ensuring there is only one instance controlling its specific hardware. This design keeps the code organized and prevents conflicting commands. The current subsystems include:
     -   **`Drivetrain`**: Manages the robot's mobility.
     -   **`Controller`**: Interfaces with the RF24 remote control to get driver inputs.
     -   **`Elevator`**: Controls the elevator mechanism.
-    -   **`Gate`**: Controls the servo-actuated gate.
     -   **`LineSensor`**: Manages the line-following sensor array.
     -   **`UltrasonicSensor`**: Manages the ultrasonic distance sensor.
 
