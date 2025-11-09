@@ -7,23 +7,24 @@
 #include "subsystem.hpp"
 #include "settings.hpp"
 
-class Pusher : public Subsystem {
+class Wrist : public Subsystem {
     public:
-        static Pusher& get_instance() {
-            static Pusher instance;
+        static Wrist& get_instance() {
+            static Wrist instance;
             return instance;
         }
 
         void loop() override;
         void log() override;
 
-        void retract();
-        void extend();
-        void set_angle_degrees(int angle);
+        void ready_pickup();
+        void active_pickup();
 
     private:
         friend class Subsystem;
-        Pusher();
+        Wrist();
+        
+        void set_angle_degrees(int angle);
 
         Servo servo_;
 

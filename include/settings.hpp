@@ -1,16 +1,11 @@
 #pragma once
 
-// SUBSYSTEM ENABLE/DISABLE TOGGLES
-#define LINE_SENSOR_ENABLED false
-#define ULTRASONIC_SENSOR_ENABLED false
-
 // LOGGING
 
 #define CONTROLLER_LOGGING_ENABLED false
 #define DRIVETRAIN_LOGGING_ENABLED false
-#define ELEVATOR_LOGGING_ENABLED false
-#define PUSHER_LOGGING_ENABLED false
-#define GATE_LOGGING_ENABLED false
+#define SHOULDER_LOGGING_ENABLED false
+#define WRIST_LOGGING_ENABLED false
 
 // SUBSYSTEMS
 
@@ -19,12 +14,12 @@
 
 #define PUSHER_RETRACTED_ANGLE 63
 #define PUSHER_EXTENDED_ANGLE 0
-// Gravity compensation for the elevator motor to hold position.
-// This value will need to be tuned experimentally.
-#define ELEVATOR_kG 0.0
 
-#define GATE_CLOSE_ANGLE 0
-#define GATE_OPEN_ANGLE 0
+#define SHOULDER_READY_PICKUP_ANGLE 0
+#define SHOULDER_ACTIVE_PICKUP_ANGLE 0
+
+#define WRIST_READY_PICKUP_ANGLE 0
+#define WRIST_ACTIVE_PICKUP_ANGLE 0
 
 // DRIVER CONTROLS
 
