@@ -37,12 +37,18 @@ void UltrasonicSensor::loop() {
     }
 }
 
-double UltrasonicSensor::get_distance_in() {
+std::optional<double> UltrasonicSensor::get_distance_in() {
     return last_distance_in_;
 }
 
 void UltrasonicSensor::log() {
     Serial.print("Sonar Distance: ");
-    Serial.print(get_distance_in());
-    Serial.println(" in");
+    // We check the member variable directly to avoid calling get_distance_in()
+    // and to demonstrate how to handle an optional.
+    if (last_distance_in_.has_value()) {
+        Serial.print(last_distance_in_.value());
+        Serial.println(" in");
+    } else {
+        Serial.println("N/A");
+    }
 }

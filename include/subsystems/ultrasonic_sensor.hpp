@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <optional>
 #include "subsystem.hpp"
 #include "pins.hpp"
 
@@ -15,15 +16,15 @@ class UltrasonicSensor : public Subsystem {
         void log() override;
 
         /**
-         * @return The last measured distance to an object in inches.
+         * @return The last measured distance in inches, or std::nullopt if no valid reading is available.
          */
-        double get_distance_in();
+        std::optional<double> get_distance_in();
 
     private:
         friend class Subsystem;
         UltrasonicSensor();
 
-        double last_distance_in_ = 0.0;
+        std::optional<double> last_distance_in_ = std::nullopt;
 
         // State machine variables for non-blocking reads
         unsigned long last_ping_time_ms_ = 0;
