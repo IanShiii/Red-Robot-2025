@@ -18,6 +18,7 @@ LineSensor* line_sensor;
 Elevator* elevator;
 Pusher* pusher;
 // UltrasonicSensor* ultrasonic_sensor;
+UltrasonicSensor* ultrasonic_sensor;
 
 bool auton_has_ran = false;
 double auton_start_time;
@@ -32,6 +33,8 @@ void setup() {
 
   pusher->retract();
 
+  ultrasonic_sensor = &UltrasonicSensor::get_instance();
+  
   Serial.begin(115200);
 }
 
@@ -42,6 +45,7 @@ void update_subsystems() {
   elevator->loop();
   pusher->loop();
   // ultrasonic_sensor->loop();
+  ultrasonic_sensor->loop();
 }
 
 void log_subsystems() {
@@ -51,6 +55,7 @@ void log_subsystems() {
   if (ELEVATOR_LOGGING_ENABLED) elevator->log();
   if (PUSHER_LOGGING_ENABLED) pusher->log();
   // if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
+  if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
 }
 
 void loop() {
@@ -61,6 +66,10 @@ void loop() {
     pusher->extend();
   } else {
     pusher->retract();
+  // Press 'B' on the controller to start the one-time autonomous routine.
+  if (controller->is_B_pressed() && !auton_has_ran) {
+    mode = AUTONOMOUS;
+    auton_start_time = millis();
   }
 
   // if (controller->is_B_pressed() && !auton_has_ran) {
@@ -70,6 +79,8 @@ void loop() {
 
   // if (mode == TELEOP) {
   //   drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+  if (mode == TELEOP) {
+    drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
     
   //   if (controller->is_Y_pressed()) {
   //     elevator->set_speed(1.0);
@@ -79,9 +90,20 @@ void loop() {
   //     elevator->set_speed(0.0);
   //   }
   // }
+    // Use shoulder buttons for the elevator
+    if (controller->is_RB_pressed()) {
+      elevator->set_speed(1.0);
+    } else if (controller->is_LB_pressed()) {
+      elevator->set_speed(-1.0);
+    } else {
+      elevator->set_speed(0.0);
+    }
+  }
 
   // if (mode == AUTONOMOUS) {
   //   double elapsed = (millis() - auton_start_time) / 1000.0;
+  if (mode == AUTONOMOUS) {
+    double elapsed = (millis() - auton_start_time) / 1000.0;
 
   //   if (elapsed < 3.0) {
   //     drivetrain->set_speed(0.5, 0.0);
@@ -90,6 +112,14 @@ void loop() {
   //     auton_has_ran = true;
   //   }
   // }
+    if (elapsed < 3.0) { // Run autonomous for 3 seconds
+      commands::follow_line();
+    } else {
+      mode = TELEOP;
+      auton_has_ran = true;
+    }
+  }
   
   // delay(20);
+  delay(20);
 }
