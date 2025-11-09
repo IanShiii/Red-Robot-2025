@@ -53,6 +53,16 @@ void loop() {
 
   if (mode == TELEOP) {
     drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+
+    // RT extend the shoulder and wrist for pickup.
+    // Releasing sends the shoulder and wrist back to the ready position.
+    if (controller->is_RT_pressed()) {
+      shoulder->set_state(ShoulderState::ACTIVE_PICKUP);
+      wrist->set_state(WristState::ACTIVE_PICKUP);
+    } else if (shoulder->get_state() == ShoulderState::ACTIVE_PICKUP) {
+      shoulder->set_state(ShoulderState::READY_PICKUP);
+      wrist->set_state(WristState::READY_PICKUP);
+    }
   }
 
   if (mode == AUTONOMOUS) {

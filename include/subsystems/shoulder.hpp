@@ -7,6 +7,10 @@
 #include "subsystem.hpp"
 #include "settings.hpp"
 
+enum ShoulderState {
+    READY_PICKUP,
+    ACTIVE_PICKUP
+};
 class Shoulder : public Subsystem {
     public:
         static Shoulder& get_instance() {
@@ -17,15 +21,17 @@ class Shoulder : public Subsystem {
         void loop() override;
         void log() override;
 
-        void ready_pickup();
-        void active_pickup();
+        void set_state(ShoulderState state);
+        ShoulderState get_state();
 
     private:
         friend class Subsystem;
         Shoulder();
-        
+
+        void set_angle_based_on_state();
         void set_angle_degrees(int angle);
 
+        ShoulderState state_;
         Servo servo_;
 
 };
