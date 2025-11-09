@@ -2,6 +2,16 @@
 
 This repository contains the C++ source code for the 2025 competition robot, "Red Robot". The project is developed using the PlatformIO IDE.
 
+## Latest Changes: Ultrasonic Sensor Overhaul
+
+The `UltrasonicSensor` subsystem was recently refactored to address a critical performance issue and improve overall robustness.
+
+-   **Problem**: The previous implementation caused significant input lag. It used a blocking `pulseIn()` call on every main loop cycle, halting the microcontroller and delaying its response to driver commands.
+-   **Solution**:
+    -   **Non-Blocking Reads**: The sensor logic was converted to a non-blocking state machine. It now uses a `millis()` timer to trigger a sensor reading only at a fixed interval (e.g., every 50ms), which eliminates input lag.
+    -   **Improved Robustness**: A specific timeout, tailored to the arena size, was added to the `pulseIn()` call to prevent it from blocking for too long when an object is out of range.
+    -   **Enhanced Safety**: The `get_distance_in()` function now returns `std::optional<double>`. This makes the subsystem's state explicit, eliminating the ambiguity between a "zero distance" reading and an "out of range" or "not yet read" state, preventing a class of potential bugs in autonomous logic.
+
 ## Documentation
 
 ### Build Environment
@@ -37,7 +47,7 @@ The repository is organized as follows:
 
 ### Code Overview
 
--   **`main.cpp`**: This file contains the `setup()` and `loop()` functions. It is responsible for initializing all subsystems and managing the high-level robot state (e.g., switching between autonomous and tele-operated modes).
+-   **`main.cpp`**: This file contains the `setup()` and `loop()` functions. It initializes all subsystems and runs the main control loop. It is currently configured to execute the `follow_line` command for testing, with the tele-op and mode-switching logic temporarily disabled.
 
 -   **Subsystem Architecture**: The robot's functionality is organized into modular `Subsystem` classes. Each subsystem is implemented as a **singleton**, ensuring there is only one instance controlling its specific hardware. This design keeps the code organized and prevents conflicting commands. The current subsystems include:
     -   **`Drivetrain`**: Manages the robot's mobility.
