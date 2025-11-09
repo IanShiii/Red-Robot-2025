@@ -4,7 +4,7 @@
 #include "subsystems/controller.hpp"
 #include "subsystems/line_sensor.hpp"
 #include "subsystems/elevator.hpp"
-#include "subsystems/gate.hpp"
+#include "subsystems/pusher.hpp"
 #include "subsystems/ultrasonic_sensor.hpp"
 #include "commands.hpp"
 
@@ -16,7 +16,7 @@ Drivetrain* drivetrain;
 Controller* controller;
 LineSensor* line_sensor;
 Elevator* elevator;
-Gate* gate;
+Pusher* pusher;
 // UltrasonicSensor* ultrasonic_sensor;
 
 bool auton_has_ran = false;
@@ -27,8 +27,10 @@ void setup() {
   controller = &Controller::get_instance();
   line_sensor = &LineSensor::get_instance();
   elevator = &Elevator::get_instance();
-  gate = &Gate::get_instance();
+  pusher = &Pusher::get_instance();
   // ultrasonic_sensor = &UltrasonicSensor::get_instance();
+
+  pusher->retract();
 
   Serial.begin(115200);
 }
@@ -38,7 +40,7 @@ void update_subsystems() {
   line_sensor->loop();
   drivetrain->loop();
   elevator->loop();
-  gate->loop();
+  pusher->loop();
   // ultrasonic_sensor->loop();
 }
 
@@ -47,7 +49,7 @@ void log_subsystems() {
   if (LINE_SENSOR_LOGGING_ENABLED) line_sensor->log();
   if (DRIVETRAIN_LOGGING_ENABLED) drivetrain->log();
   if (ELEVATOR_LOGGING_ENABLED) elevator->log();
-  if (GATE_LOGGING_ENABLED) gate->log();
+  if (PUSHER_LOGGING_ENABLED) pusher->log();
   // if (SONAR_LOGGING_ENABLED) ultrasonic_sensor->log();
 }
 
@@ -55,7 +57,11 @@ void loop() {
   update_subsystems();
   log_subsystems();
 
-  commands::follow_line();
+  if (controller->is_RT_pressed()) {
+    pusher->extend();
+  } else {
+    pusher->retract();
+  }
 
   // if (controller->is_B_pressed() && !auton_has_ran) {
   //   mode = AUTONOMOUS;
@@ -64,6 +70,14 @@ void loop() {
 
   // if (mode == TELEOP) {
   //   drivetrain->set_speed_based_on_joysticks(controller->get_left_y(), controller->get_right_x());
+    
+  //   if (controller->is_Y_pressed()) {
+  //     elevator->set_speed(1.0);
+  //   } else if (controller->is_A_pressed()) {
+  //     elevator->set_speed(-1.0);
+  //   } else {
+  //     elevator->set_speed(0.0);
+  //   }
   // }
 
   // if (mode == AUTONOMOUS) {
@@ -77,5 +91,5 @@ void loop() {
   //   }
   // }
   
-  delay(20);
+  // delay(20);
 }

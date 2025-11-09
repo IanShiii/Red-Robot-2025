@@ -9,6 +9,7 @@ void Elevator::loop() {}
 void Elevator::log() {}
 
 void Elevator::set_speed(double speed) {
+    speed += ELEVATOR_kG;
     speed = constrain(speed, -1.0, 1.0);
     analogWrite(ELEVATOR_ENABLE_PIN, int(255 * abs(speed)));
     digitalWrite(ELEVATOR_PHASE_PIN, speed > 0.0 ? HIGH : LOW);
